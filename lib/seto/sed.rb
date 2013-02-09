@@ -1,5 +1,17 @@
 module Seto
   class Sed
+    def address
+      raise NotImplementedError      
+    end
+
+    def d
+      raise NotImplementedError
+    end
+
+    def s
+      raise NotImplementedError
+    end
+
     private
     # :label
     def label
