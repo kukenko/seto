@@ -5,15 +5,9 @@ module Seto
       @commands   = []
     end
 
-    def load(&block)
+    def edit(&block)
       instance_eval &block
-    end
-
-    def run
-      @enumerator.map do |line|
-        @commands.inject(line) { |result, cmd| cmd.call(result) }
-      end
-      .select { |line| line }
+      run
     end
 
     def address
@@ -35,6 +29,13 @@ module Seto
     end
 
     private
+
+    def run
+      @enumerator.map do |line|
+        @commands.inject(line) { |result, cmd| cmd.call(result) }
+      end
+      .select { |line| line }
+    end
 
     # :label
     def label

@@ -2,8 +2,6 @@ require 'seto/sed'
 
 class File
   def sed(&block)
-    sed = Seto::Sed.new(self.each)
-    sed.load &block
-    sed.run
+    Seto::Sed.new(self.each).edit &block
   end
 end
