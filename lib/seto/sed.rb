@@ -1,18 +1,37 @@
 module Seto
   class Sed
+    def initialize(enumerator)
+      @enumerator = enumerator
+      @commands   = []
+    end
+
+    def load(&block)
+      instance_eval &block
+    end
+
+    def run
+      @enumerator.map do |line|
+        @commands.inject(line) { |result, cmd| cmd.call(result) }
+      end
+    end
+
     def address
-      raise NotImplementedError      
+      raise NotImplementedError
     end
 
     def d
       raise NotImplementedError
     end
 
-    def s
-      raise NotImplementedError
+    def s(pattern, replacement, flag=nil)
+      proc = Proc.new do |arg|
+        substitute arg, pattern, replacement, flag
+      end
+      @commands.push proc
     end
 
     private
+
     # :label
     def label
       raise NotImplementedError
@@ -103,9 +122,9 @@ module Seto
       raise NotImplementedError
     end
 
-    # s/.../.../
-    def substitute
-      raise NotImplementedError
+    # s/.../.../flg
+    def substitute(arg, pattern, replacement, flag)
+      arg.sub(pattern, replacement)
     end
 
     # t label
