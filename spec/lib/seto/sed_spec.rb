@@ -22,5 +22,13 @@ module Seto
         sed.run.should eql(["Seto no Hanayome.\n", "Seto no Hanayome.\n"])
       end
     end
+
+    describe '#d' do
+      it 'deletes current line' do
+        sed = Sed.new(File.open(__FILE__).each)
+        sed.load { d }
+        sed.run.should be_empty
+      end
+    end
   end
 end

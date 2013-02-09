@@ -13,6 +13,7 @@ module Seto
       @enumerator.map do |line|
         @commands.inject(line) { |result, cmd| cmd.call(result) }
       end
+      .select { |line| line }
     end
 
     def address
@@ -20,7 +21,10 @@ module Seto
     end
 
     def d
-      raise NotImplementedError
+      proc = Proc.new do |arg|
+        delete arg
+      end
+      @commands.push proc
     end
 
     def s(pattern, replacement, flag=nil)
@@ -58,8 +62,8 @@ module Seto
     end
 
     # d
-    def delete
-      raise NotImplementedError
+    def delete(arg)
+      nil
     end
 
     # g
