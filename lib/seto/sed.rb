@@ -14,6 +14,13 @@ module Seto
       raise NotImplementedError
     end
 
+    def a(text)
+      proc = Proc.new do |arg|
+        append arg, text
+      end
+      @commands.push proc
+    end
+
     def d
       proc = Proc.new do |arg|
         delete arg
@@ -48,8 +55,8 @@ module Seto
     end
 
     # a \
-    def append(text)
-      raise NotImplementedError
+    def append(arg, text)
+      arg + text
     end
 
     # b label
