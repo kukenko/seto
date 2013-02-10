@@ -2,7 +2,8 @@ module Seto
   class Sed
     def initialize(enumerator)
       @enumerator = enumerator
-      @commands   = []
+      @commands = []
+      @pattern_space = []
     end
 
     def edit(&block)
@@ -15,30 +16,22 @@ module Seto
     end
 
     def a(text)
-      proc = Proc.new do |arg|
-        append arg, text
-      end
+      proc = Proc.new { append text }
       @commands.push proc
     end
 
     def d
-      proc = Proc.new do |arg|
-        delete arg
-      end
+      proc = Proc.new { delete }
       @commands.push proc
     end
 
     def i(text)
-      proc = Proc.new do |arg|
-        insert arg, text
-      end
+      proc = Proc.new { insert text }
       @commands.push proc
     end
 
     def s(pattern, replacement, flag=nil)
-      proc = Proc.new do |arg|
-        substitute arg, pattern, replacement, flag
-      end
+      proc = Proc.new { substitute pattern, replacement, flag }
       @commands.push proc
     end
 
@@ -46,9 +39,13 @@ module Seto
 
     def run
       @enumerator.map do |line|
-        @commands.inject(line) { |result, cmd| cmd.call(result) }
+        @pattern_space.push line
+        @commands.inject(line) { |result, cmd| cmd.call }
+        result = @pattern_space.dup
+        # @pattern_space.clear
+        result.join
       end
-      .select { |line| line }
+      .reject { |line| line.empty? }
     end
 
     # :label
@@ -62,8 +59,8 @@ module Seto
     end
 
     # a \
-    def append(arg, text)
-      arg + text
+    def append(text)
+      @pattern_space.each { |line| line << text }
     end
 
     # b label
@@ -77,8 +74,8 @@ module Seto
     end
 
     # d
-    def delete(arg)
-      nil
+    def delete
+      @pattern_space.clear
     end
 
     # g
@@ -102,8 +99,8 @@ module Seto
     end
 
     # i \
-    def insert(arg, text)
-      text + arg
+    def insert(text)
+      @pattern_space.map! { |line| text << line }
     end
 
     # l
@@ -142,8 +139,8 @@ module Seto
     end
 
     # s/.../.../flg
-    def substitute(arg, pattern, replacement, flag)
-      arg.sub(pattern, replacement)
+    def substitute(pattern, replacement, flag)
+      @pattern_space.each { |line| line.sub!(pattern, replacement) }
     end
 
     # t label
