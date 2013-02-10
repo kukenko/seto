@@ -12,9 +12,13 @@ module Seto
       m.should include(:s)
     end
 
+    describe '#address' do
+      it ''
+    end
+
     describe '#a' do
       it 'appends text to current line' do
-        sed = Sed.new(File.open('./spec/files/simple.txt').each)
+        sed = Sed.new(File.open('./spec/files/simple.txt').each.with_index(1))
         sed.edit { a 'by ruby.'}
         .should eql(["Seto is pseudo sed.\nby ruby."])
       end
@@ -22,14 +26,14 @@ module Seto
 
     describe '#d' do
       it 'deletes current line' do
-        sed = Sed.new(File.open(__FILE__).each)
+        sed = Sed.new(File.open(__FILE__).each.with_index(1))
         sed.edit { d }.should be_empty
       end
     end
 
     describe '#i' do
       it 'inserts text before current line' do
-        sed = Sed.new(File.open('./spec/files/simple.txt').each)
+        sed = Sed.new(File.open('./spec/files/simple.txt').each.with_index(1))
         sed.edit { i 'by ruby.' }
         .should eql(["by ruby.Seto is pseudo sed.\n"])
       end
@@ -37,7 +41,7 @@ module Seto
 
     describe '#s(pattern, replacement)' do
       it "substitutes 'replacement' for 'pattern'" do
-        sed = Sed.new(File.open('./spec/files/seto_is.txt').each)
+        sed = Sed.new(File.open('./spec/files/seto_is.txt').each.with_index(1))
         sed.edit do
           s /is/, 'no'
           s /a place name/, 'Hanayome'

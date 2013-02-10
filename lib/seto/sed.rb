@@ -1,9 +1,37 @@
 module Seto
   class Sed
+    class PatternSpace
+      def update(line)
+        @pattern_space = line[0]
+        @current_line  = line[1]
+      end
+
+      def append(text)
+        @pattern_space += text
+      end
+
+      def delete
+        @pattern_space = ''
+      end
+
+      def insert(text)
+        @pattern_space = "#{text}#{@pattern_space}"
+      end
+
+      def sub(patern, replace)
+        @pattern_space.sub!(patern, replace)
+      end
+
+      def dup
+        @pattern_space.dup
+      end
+    end
+
     def initialize(enumerator)
       @enumerator = enumerator
       @commands = []
-      @pattern_space = []
+      @pattern_space = PatternSpace.new
+      @result = []
     end
 
     def edit(&block)
@@ -11,8 +39,13 @@ module Seto
       run
     end
 
-    def address
-      raise NotImplementedError
+    def address(first, second=nil)
+      condition = limit? first, second
+      if condition && block_given?
+        yield
+        run
+      end
+      condition
     end
 
     def a(text)
@@ -39,11 +72,15 @@ module Seto
 
     def run
       loop do
-        line = @enumerator.next
-        @pattern_space.push line
-        @commands.inject(line) { |result, cmd| cmd.call }
+        @pattern_space.update @enumerator.next
+        @commands.inject(@pattern_space) { |result, cmd| cmd.call }
+        @result << @pattern_space.dup
       end
-      @pattern_space
+      @result.reject { |l| l.empty? }
+    end
+
+    def limit?(first, second=nil)
+      first == 1
     end
 
     # :label
@@ -58,7 +95,7 @@ module Seto
 
     # a \
     def append(text)
-      @pattern_space.each { |line| line << text }
+      @pattern_space.append text
     end
 
     # b label
@@ -73,7 +110,7 @@ module Seto
 
     # d
     def delete
-      @pattern_space.clear
+      @pattern_space.delete
     end
 
     # g
@@ -98,7 +135,7 @@ module Seto
 
     # i \
     def insert(text)
-      @pattern_space.map! { |line| text << line }
+      @pattern_space.insert text
     end
 
     # l
@@ -138,7 +175,7 @@ module Seto
 
     # s/.../.../flg
     def substitute(pattern, replacement, flag)
-      @pattern_space.each { |line| line.sub!(pattern, replacement) }
+      @pattern_space.sub(pattern, replacement)
     end
 
     # t label
