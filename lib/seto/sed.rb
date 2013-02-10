@@ -28,6 +28,13 @@ module Seto
       @commands.push proc
     end
 
+    def i(text)
+      proc = Proc.new do |arg|
+        insert arg, text
+      end
+      @commands.push proc
+    end
+
     def s(pattern, replacement, flag=nil)
       proc = Proc.new do |arg|
         substitute arg, pattern, replacement, flag
@@ -95,8 +102,8 @@ module Seto
     end
 
     # i \
-    def insert(text)
-      raise NotImplementedError
+    def insert(arg, text)
+      text + arg
     end
 
     # l

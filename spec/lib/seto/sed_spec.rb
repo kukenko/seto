@@ -8,6 +8,7 @@ module Seto
       m.should include(:address)
       m.should include(:a)
       m.should include(:d)
+      m.should include(:i)
       m.should include(:s)
     end
 
@@ -23,6 +24,14 @@ module Seto
       it 'deletes current line' do
         sed = Sed.new(File.open(__FILE__).each)
         sed.edit { d }.should be_empty
+      end
+    end
+
+    describe '#i' do
+      it 'inserts text before current line' do
+        sed = Sed.new(File.open('./spec/files/simple.txt').each)
+        sed.edit { i 'by ruby.' }
+        .should eql(["by ruby.Seto is pseudo sed.\n"])
       end
     end
 
