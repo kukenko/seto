@@ -38,14 +38,12 @@ module Seto
     private
 
     def run
-      @enumerator.map do |line|
+      loop do
+        line = @enumerator.next
         @pattern_space.push line
         @commands.inject(line) { |result, cmd| cmd.call }
-        result = @pattern_space.dup
-        @pattern_space.clear
-        result.join
       end
-      .reject { |line| line.empty? }
+      @pattern_space
     end
 
     # :label
