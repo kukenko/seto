@@ -42,7 +42,7 @@ module Seto
         @pattern_space.push line
         @commands.inject(line) { |result, cmd| cmd.call }
         result = @pattern_space.dup
-        # @pattern_space.clear
+        @pattern_space.clear
         result.join
       end
       .reject { |line| line.empty? }
