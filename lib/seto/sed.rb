@@ -4,57 +4,24 @@ module Seto
   class Sed
     def initialize(enumerator)
       @pattern_space = Seto::PatternSpace.new(enumerator)
-      @commands = []
       @result = []
     end
 
     def edit(&block)
-      instance_eval &block
-      run
+      loop do
+        @pattern_space.update
+        instance_eval &block
+        @result << @pattern_space.dup
+      end
+      @result.reject { |l| l.empty? }
     end
 
     def address(first, second=nil)
       condition = limit? first, second
       if condition && block_given?
         yield
-        run
       end
       condition
-    end
-
-    def a(text)
-      proc = Proc.new { append text }
-      @commands.push proc
-    end
-
-    def d
-      proc = Proc.new { delete }
-      @commands.push proc
-    end
-
-    def i(text)
-      proc = Proc.new { insert text }
-      @commands.push proc
-    end
-
-    def s(pattern, replacement, flag=nil)
-      proc = Proc.new { substitute pattern, replacement, flag }
-      @commands.push proc
-    end
-
-    private
-
-    def run
-      loop do
-        @pattern_space.update
-        @commands.inject(@pattern_space) { |result, cmd| cmd.call }
-        @result << @pattern_space.dup
-      end
-      @result.reject { |l| l.empty? }
-    end
-
-    def limit?(first, second=nil)
-      first == 1
     end
 
     # :label
@@ -72,6 +39,8 @@ module Seto
       @pattern_space.append text
     end
 
+    alias :a :append
+
     # b label
     def branch(label)
       raise NotImplementedError
@@ -86,6 +55,8 @@ module Seto
     def delete
       @pattern_space.delete
     end
+
+    alias :d :delete
 
     # g
     def get
@@ -111,6 +82,8 @@ module Seto
     def insert(text)
       @pattern_space.insert text
     end
+
+    alias :i :insert
 
     # l
     def look
@@ -148,9 +121,11 @@ module Seto
     end
 
     # s/.../.../flg
-    def substitute(pattern, replacement, flag)
+    def substitute(pattern, replacement, flag=nil)
       @pattern_space.sub(pattern, replacement)
     end
+
+    alias :s :substitute
 
     # t label
     def test(label)
@@ -170,6 +145,13 @@ module Seto
     # y/.../.../
     def transform
       raise NotImplementedError
+    end
+
+    private
+
+    # xxx
+    def limit?(first, second=nil)
+      first == 1
     end
   end
 end
