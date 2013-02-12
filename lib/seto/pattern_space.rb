@@ -1,28 +1,31 @@
 module Seto
   class PatternSpace
-    def update(line)
-      @pattern_space = line[0]
-      @current_line  = line[1]
+    def initialize(enumerator)
+      @enumerator = enumerator
+    end
+
+    def update
+      @current_line, @line_number = @enumerator.next
     end
 
     def append(text)
-      @pattern_space += text
+      @current_line += text
     end
 
     def delete
-      @pattern_space = ''
+      @current_line = ''
     end
 
     def insert(text)
-      @pattern_space = "#{text}#{@pattern_space}"
+      @current_line = "#{text}#{@current_line}"
     end
 
     def sub(patern, replace)
-      @pattern_space.sub!(patern, replace)
+      @current_line.sub!(patern, replace)
     end
 
     def dup
-      @pattern_space.dup
+      @current_line.dup
     end
   end
 end

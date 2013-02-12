@@ -3,9 +3,8 @@ require 'seto/pattern_space'
 module Seto
   class Sed
     def initialize(enumerator)
-      @enumerator = enumerator
+      @pattern_space = Seto::PatternSpace.new(enumerator)
       @commands = []
-      @pattern_space = Seto::PatternSpace.new
       @result = []
     end
 
@@ -47,7 +46,7 @@ module Seto
 
     def run
       loop do
-        @pattern_space.update @enumerator.next
+        @pattern_space.update
         @commands.inject(@pattern_space) { |result, cmd| cmd.call }
         @result << @pattern_space.dup
       end
