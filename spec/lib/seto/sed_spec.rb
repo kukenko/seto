@@ -18,6 +18,28 @@ module Seto
       m.should include(:s)
     end
 
+    describe '#address' do
+      it 'selects the rows that apply commands' do
+        setois.edit do
+          s /is/, 'no' if address(2)
+          s /a place name/, 'Hanayome' if address(2)
+        end
+        .should eql(["Seto is pseudo sed.\n", "Seto no Hanayome.\n"])
+      end
+
+      context 'with block' do
+        it 'selects the rows that apply commands' do
+          setois.edit do
+            address(2) {
+              s /is/, 'no'
+              s /a place name/, 'Hanayome'
+            }
+          end
+          .should eql(["Seto is pseudo sed.\n", "Seto no Hanayome.\n"])
+        end
+      end
+    end
+
     describe '#a' do
       it 'appends text to current line' do
         simple.edit { a 'by ruby.'}

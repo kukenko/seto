@@ -151,7 +151,7 @@ module Seto
 
     # xxx
     def limit?(first, second=nil)
-      first == 1
+      first == @pattern_space.line_number
     end
   end
 end

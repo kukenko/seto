@@ -1,5 +1,6 @@
 module Seto
   class PatternSpace
+    attr_reader :line_number
     def initialize(enumerator)
       @enumerator = enumerator
     end
