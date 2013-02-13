@@ -48,8 +48,10 @@ module Seto
 
     # c \
     def change(text)
-      raise NotImplementedError
+      @pattern_space.change text
     end
+
+    alias :c :change
 
     # d
     def delete
@@ -121,8 +123,8 @@ module Seto
     end
 
     # s/.../.../flg
-    def substitute(pattern, replacement, flag=nil)
-      @pattern_space.sub(pattern, replacement)
+    def substitute(pattern, replace, flag=nil)
+      @pattern_space.sub pattern, replace
     end
 
     alias :s :substitute
@@ -143,9 +145,11 @@ module Seto
     end
 
     # y/.../.../
-    def transform
-      raise NotImplementedError
+    def transform(pattern, replace)
+      @pattern_space.transform pattern, replace
     end
+
+    alias :y :transform
 
     private
 

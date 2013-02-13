@@ -13,6 +13,10 @@ module Seto
       @current_line += text
     end
 
+    def change(text)
+      @current_line = text
+    end
+
     def delete
       @current_line = ''
     end
@@ -23,6 +27,10 @@ module Seto
 
     def sub(patern, replace)
       @current_line.sub!(patern, replace)
+    end
+
+    def transform(pattern, replace)
+      @current_line.tr! pattern, replace
     end
 
     def dup

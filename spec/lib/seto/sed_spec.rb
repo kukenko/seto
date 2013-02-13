@@ -47,6 +47,13 @@ module Seto
       end
     end
 
+    describe '#c' do
+      it 'changes the current line with text' do
+        simple.edit { c 'This line has been censored.'}
+        .should eql(["This line has been censored."])
+      end
+    end
+
     describe '#d' do
       it 'deletes current line' do
         simple.edit { d }.should be_empty
@@ -68,6 +75,13 @@ module Seto
           s /pseudo sed/, 'Hanayome'
         end
         .should eql(["Seto no Hanayome.\n", "Seto no Hanayome.\n"])
+      end
+    end
+
+    describe '#y' do
+      it 'transforms characters into the other charaters' do
+        simple.edit { y 'a-z', 'A-Z' }
+        .should eql(["SETO IS PSEUDO SED.\n"])
       end
     end
   end
