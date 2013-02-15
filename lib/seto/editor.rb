@@ -25,8 +25,10 @@ module Seto
       @current_line = "#{text}#{@current_line}"
     end
 
-    def sub(pattern, replace, flag)
-      @current_line.sub! pattern, replace
+    def substitute(pattern, replace, flag)
+      method = :sub!
+      method = :gsub! if flag && flag == :g
+      @current_line.send(method, pattern, replace)
     end
 
     def transform(pattern, replace)

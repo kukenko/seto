@@ -76,6 +76,12 @@ module Seto
         end
         .should eql(["Seto no Hanayome.\n", "Seto no Hanayome.\n"])
       end
+      context 'with g flag' do
+        it 'changes all occurrence of the regular expression into a new value' do
+          simple.edit { s /s/, 'S', :g }
+          .should eql(["Seto iS pSeudo Sed.\n"])
+        end
+      end
     end
 
     describe '#y' do

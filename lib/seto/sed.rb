@@ -122,7 +122,7 @@ module Seto
 
     # s
     def substitute(pattern, replace, flag=nil)
-      @editor.sub pattern, replace, flag
+      @editor.substitute pattern, replace, flag
     end
 
     alias :s :substitute
