@@ -1,4 +1,4 @@
-require 'seto/pattern_space'
+require 'seto/editor'
 
 module Seto
   class Sed
