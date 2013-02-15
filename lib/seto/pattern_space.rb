@@ -1,5 +1,5 @@
 module Seto
-  class PatternSpace
+  class Editor
     attr_reader :line_number
     def initialize(enumerator)
       @enumerator = enumerator
@@ -25,8 +25,8 @@ module Seto
       @current_line = "#{text}#{@current_line}"
     end
 
-    def sub(patern, replace)
-      @current_line.sub!(patern, replace)
+    def sub(pattern, replace, flag)
+      @current_line.sub! pattern, replace
     end
 
     def transform(pattern, replace)

@@ -3,24 +3,22 @@ require 'seto/pattern_space'
 module Seto
   class Sed
     def initialize(enumerator)
-      @pattern_space = Seto::PatternSpace.new(enumerator)
+      @editor = Seto::Editor.new(enumerator)
       @result = []
     end
 
     def edit(&block)
       loop do
-        @pattern_space.update
+        @editor.update
         instance_eval &block
-        @result << @pattern_space.dup
+        @result << @editor.dup
       end
       @result.reject { |l| l.empty? }
     end
 
-    def address(first, second=nil)
-      condition = limit? first, second
-      if condition && block_given?
-        yield
-      end
+    def address(pattern, last=nil)
+      condition = limit?(pattern, last)
+      yield if condition && block_given?
       condition
     end
 
@@ -34,28 +32,28 @@ module Seto
       raise NotImplementedError
     end
 
-    # a \
+    # a
     def append(text)
-      @pattern_space.append text
+      @editor.append text
     end
 
     alias :a :append
 
-    # b label
+    # b
     def branch(label)
       raise NotImplementedError
     end
 
-    # c \
+    # c
     def change(text)
-      @pattern_space.change text
+      @editor.change text
     end
 
     alias :c :change
 
     # d
     def delete
-      @pattern_space.delete
+      @editor.delete
     end
 
     alias :d :delete
@@ -80,9 +78,9 @@ module Seto
       raise NotImplementedError
     end
 
-    # i \
+    # i
     def insert(text)
-      @pattern_space.insert text
+      @editor.insert text
     end
 
     alias :i :insert
@@ -117,24 +115,24 @@ module Seto
       raise NotImplementedError
     end
 
-    # r filename
+    # r
     def read(filename)
       raise NotImplementedError
     end
 
-    # s/.../.../flg
+    # s
     def substitute(pattern, replace, flag=nil)
-      @pattern_space.sub pattern, replace
+      @editor.sub pattern, replace, flag
     end
 
     alias :s :substitute
 
-    # t label
+    # t
     def test(label)
       raise NotImplementedError
     end
 
-    # w filename
+    # w
     def write(filename)
       raise NotImplementedError
     end
@@ -144,9 +142,9 @@ module Seto
       raise NotImplementedError
     end
 
-    # y/.../.../
+    # y
     def transform(pattern, replace)
-      @pattern_space.transform pattern, replace
+      @editor.transform pattern, replace
     end
 
     alias :y :transform
@@ -154,8 +152,8 @@ module Seto
     private
 
     # xxx
-    def limit?(first, second=nil)
-      first == @pattern_space.line_number
+    def limit?(pattern, last=nil)
+      pattern == @editor.line_number
     end
   end
 end
