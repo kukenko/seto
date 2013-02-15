@@ -67,8 +67,8 @@ module Seto
       end
     end
 
-    describe '#s(pattern, replacement)' do
-      it "substitutes 'replacement' for 'pattern'" do
+    describe '#s' do
+      it 'changes occurrence of the regular expression into a new value' do
         setois.edit do
           s /is/, 'no'
           s /a place name/, 'Hanayome'
