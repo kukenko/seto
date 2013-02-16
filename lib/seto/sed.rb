@@ -158,7 +158,12 @@ module Seto
         when Fixnum then pattern == @editor.line_number
         when Regexp then pattern =~ @editor.current_line
         else
-          false
+          pattern
+        end
+      else
+        combination = [pattern.class, last.class]
+        case combination
+        when [Fixnum, Fixnum] then (pattern..last).cover? @editor.line_number
         end
       end
     end

@@ -36,6 +36,13 @@ module Seto
         .should eql(["Seto is pseudo sed!\n", "Seto is a place name.\n"])
       end
 
+      it 'selects the row by the line number range' do
+        setois.edit do
+          s /\./, '!' if address(1, 2)
+        end
+        .should eql(["Seto is pseudo sed!\n", "Seto is a place name!\n"])
+      end
+
       context 'with block' do
         it 'selects the row by the line number' do
           setois.edit do
