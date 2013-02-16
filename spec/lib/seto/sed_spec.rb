@@ -13,13 +13,15 @@ module Seto
       m.should include(:edit)
       m.should include(:address)
       m.should include(:a)
+      m.should include(:c)
       m.should include(:d)
       m.should include(:i)
       m.should include(:s)
+      m.should include(:y)
     end
 
     describe '#address' do
-      it 'selects the rows that apply commands' do
+      it 'selects the row by the line number' do
         setois.edit do
           s /is/, 'no' if address(2)
           s /a place name/, 'Hanayome' if address(2)
@@ -27,10 +29,27 @@ module Seto
         .should eql(["Seto is pseudo sed.\n", "Seto no Hanayome.\n"])
       end
 
+      it 'selects the row by the regular expression' do
+        setois.edit do
+          s /\./, '!' if address(/pseudo/)
+        end
+        .should eql(["Seto is pseudo sed!\n", "Seto is a place name.\n"])
+      end
+
       context 'with block' do
-        it 'selects the rows that apply commands' do
+        it 'selects the row by the line number' do
           setois.edit do
             address(2) {
+              s /is/, 'no'
+              s /a place name/, 'Hanayome'
+            }
+          end
+          .should eql(["Seto is pseudo sed.\n", "Seto no Hanayome.\n"])
+        end
+
+        it 'selects the row by the regular expression' do
+          setois.edit do
+            address(/place/) {
               s /is/, 'no'
               s /a place name/, 'Hanayome'
             }

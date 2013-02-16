@@ -17,7 +17,7 @@ module Seto
     end
 
     def address(pattern, last=nil)
-      condition = limit?(pattern, last)
+      condition = within_the_limit?(pattern, last)
       yield if condition && block_given?
       condition
     end
@@ -152,8 +152,15 @@ module Seto
     private
 
     # xxx
-    def limit?(pattern, last=nil)
-      pattern == @editor.line_number
+    def within_the_limit?(pattern, last=nil)
+      unless last
+        case pattern
+        when Fixnum then pattern == @editor.line_number
+        when Regexp then pattern =~ @editor.current_line
+        else
+          false
+        end
+      end
     end
   end
 end

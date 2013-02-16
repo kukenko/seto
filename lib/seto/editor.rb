@@ -1,6 +1,6 @@
 module Seto
   class Editor
-    attr_reader :line_number
+    attr_reader :current_line, :line_number
     def initialize(enumerator)
       @enumerator = enumerator
     end
@@ -28,7 +28,7 @@ module Seto
     def substitute(pattern, replace, flag)
       method = :sub!
       method = :gsub! if flag && flag == :g
-      @current_line.send(method, pattern, replace)
+      @current_line.send method, pattern, replace
     end
 
     def transform(pattern, replace)
