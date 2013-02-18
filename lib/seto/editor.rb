@@ -1,11 +1,12 @@
 module Seto
   class Editor
-    attr_reader :current_line, :line_number
+    attr_reader :current_line, :line_number, :result
     def initialize(enumerator)
       @enumerator = enumerator
+      @result = []
     end
 
-    def update
+    def load
       @current_line, @line_number = @enumerator.next
     end
 
@@ -35,8 +36,8 @@ module Seto
       @current_line.tr! pattern, replace
     end
 
-    def dup
-      @current_line.dup
+    def copy
+      @result << @current_line.dup
     end
   end
 end

@@ -17,6 +17,7 @@ module Seto
       m.should include(:d)
       m.should include(:i)
       m.should include(:p)
+      m.should include(:q)
       m.should include(:s)
       m.should include(:y)
     end
@@ -104,6 +105,16 @@ module Seto
           }
         }
         .should eql("Seto is pseudo sed.\nSeto iS pSeudo Sed.\n")
+      end
+    end
+
+    describe '#q' do
+      it 'quit the running scripts' do
+        simple.edit do
+          q
+          s /s/, 'S'
+        end
+        .should eql(["Seto is pseudo sed.\n"])
       end
     end
 

@@ -9,11 +9,11 @@ module Seto
 
     def edit(&block)
       loop do
-        @editor.update
+        @editor.load
         instance_eval &block
-        @result << @editor.dup
+        @editor.copy
       end
-      @result.reject { |l| l.empty? }
+      @editor.result.reject { |l| l.empty? }
     end
 
     def address(pattern, last=nil)
@@ -113,9 +113,12 @@ module Seto
     end
 
     # q
-    def quite
-      raise NotImplementedError
+    def quit
+      @editor.copy
+      raise StopIteration
     end
+
+    alias :q :quit
 
     # r
     def read(filename)
