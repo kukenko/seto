@@ -102,8 +102,10 @@ module Seto
 
     # p
     def print
-      raise NotImplementedError
+      Kernel.print @editor.current_line
     end
+
+    alias :p :print
 
     # P
     def print!

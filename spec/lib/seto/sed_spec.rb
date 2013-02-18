@@ -16,6 +16,7 @@ module Seto
       m.should include(:c)
       m.should include(:d)
       m.should include(:i)
+      m.should include(:p)
       m.should include(:s)
       m.should include(:y)
     end
@@ -90,6 +91,19 @@ module Seto
       it 'inserts text before current line' do
         simple.edit { i 'by ruby.' }
         .should eql(["by ruby.Seto is pseudo sed.\n"])
+      end
+    end
+
+    describe '#p' do
+      it 'prints pattern space to stdout' do
+        capture {
+          simple.edit {
+            p
+            s /s/, 'S', :g
+            p
+          }
+        }
+        .should eql("Seto is pseudo sed.\nSeto iS pSeudo Sed.\n")
       end
     end
 
