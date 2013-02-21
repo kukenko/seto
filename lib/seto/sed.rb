@@ -5,6 +5,7 @@ module Seto
     def initialize(enumerator)
       @editor = Seto::Editor.new(enumerator)
       @result = []
+      @range_table = {}
     end
 
     def edit(&block)
@@ -169,6 +170,26 @@ module Seto
         combination = [pattern.class, last.class]
         case combination
         when [Fixnum, Fixnum] then (pattern..last).cover? @editor.line_number
+        when [Regexp, Regexp]
+          unless @range_table.key? pattern
+            if pattern =~ @editor.current_line
+              @range_table[pattern] = @editor.line_number
+              true
+            else
+              false
+            end
+          else
+            unless @range_table.key? last
+              if last =~ @editor.current_line
+                @range_table[last] = @editor.line_number
+              end
+              true
+            else
+              false
+            end
+          end
+        when [Fixnum, Regexp] then false
+        when [Rangep, Fixnum] then false
         end
       end
     end

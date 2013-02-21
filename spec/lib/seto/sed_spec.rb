@@ -4,9 +4,11 @@ module Seto
   describe Sed do
     SIMPLE = './spec/files/simple.txt'
     SETOIS = './spec/files/seto_is.txt'
+    STARTEND = './spec/files/start_end.txt'
 
     let(:simple) { Sed.new(File.open(SIMPLE).each.with_index(1)) }
     let(:setois) { Sed.new(File.open(SETOIS).each.with_index(1)) }
+    let(:startend) { Sed.new(File.open(STARTEND).each.with_index(1)) }
 
     it 'has the following methods' do
       m = Sed.new(File.open(__FILE__).each).methods
@@ -45,6 +47,13 @@ module Seto
         .should eql(["Seto is pseudo sed!\n", "Seto is a place name!\n"])
       end
 
+      it 'selects the row by the regexp range' do
+        startend.edit do
+          s /hello/, 'world' if address(/START/, /END/)
+        end
+        .should eql(["hello\n", "START world\n", "world\n", "END world\n", "hello\n"])
+      end
+
       context 'with block' do
         it 'selects the row by the line number' do
           setois.edit do
@@ -64,6 +73,15 @@ module Seto
             }
           end
           .should eql(["Seto is pseudo sed.\n", "Seto no Hanayome.\n"])
+        end
+
+        it 'selects the row by the regexp range' do
+          startend.edit do
+            address(/START/, /END/) do
+              s /hello/, 'world'
+            end
+          end
+          .should eql(["hello\n", "START world\n", "world\n", "END world\n", "hello\n"])
         end
       end
     end
