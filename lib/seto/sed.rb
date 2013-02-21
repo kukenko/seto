@@ -125,8 +125,15 @@ module Seto
 
     # r
     def read(filename)
-      raise NotImplementedError
+      begin
+        text = open(filename).read
+      rescue
+        # ignore
+      end
+      @editor.append text if text
     end
+
+    alias :r :read
 
     # s
     def substitute(pattern, replace, flag=nil)

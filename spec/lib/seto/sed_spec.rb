@@ -23,6 +23,7 @@ module Seto
       m.should include(:n)
       m.should include(:p)
       m.should include(:q)
+      m.should include(:r)
       m.should include(:s)
       m.should include(:y)
     end
@@ -148,6 +149,14 @@ module Seto
           s /s/, 'S'
         end
         .should eql(["Seto is pseudo sed.\n"])
+      end
+    end
+
+    describe '#r' do
+      it 'read from file' do
+        setois.edit { r SIMPLE if address(2) }
+        .should eql(["Seto is pseudo sed.\n",
+            "Seto is a place name.\nSeto is pseudo sed.\n"])
       end
     end
 
