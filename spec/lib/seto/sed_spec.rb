@@ -5,10 +5,12 @@ module Seto
     SIMPLE = './spec/files/simple.txt'
     SETOIS = './spec/files/seto_is.txt'
     STARTEND = './spec/files/start_end.txt'
+    SETO = './spec/files/seto.txt'
 
     let(:simple) { Sed.new(File.open(SIMPLE).each.with_index(1)) }
     let(:setois) { Sed.new(File.open(SETOIS).each.with_index(1)) }
     let(:startend) { Sed.new(File.open(STARTEND).each.with_index(1)) }
+    let(:seto) { Sed.new(File.open(SETO).each.with_index(1)) }
 
     it 'has the following methods' do
       m = Sed.new(File.open(__FILE__).each).methods
@@ -18,6 +20,7 @@ module Seto
       m.should include(:c)
       m.should include(:d)
       m.should include(:i)
+      m.should include(:n)
       m.should include(:p)
       m.should include(:q)
       m.should include(:s)
@@ -110,6 +113,18 @@ module Seto
       it 'inserts text before current line' do
         simple.edit { i 'by ruby.' }
         .should eql(["by ruby.Seto is pseudo sed.\n"])
+      end
+    end
+
+    describe '#n' do
+      it 'reads the next line' do
+        seto.edit {
+          address(/^#/) {
+            n
+            d if address /^$/
+          }
+        }
+        .should eql(["# Seto\n", "Seto is pseudo sed.\n"])
       end
     end
 

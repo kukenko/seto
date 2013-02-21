@@ -92,8 +92,11 @@ module Seto
 
     # n
     def next
-      raise NotImplementedError
+      @editor.copy
+      @editor.load
     end
+
+    alias :n :next
 
     # N
     def next!
