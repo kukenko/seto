@@ -4,7 +4,6 @@ module Seto
   class Sed
     def initialize(enumerator)
       @editor = Seto::Editor.new(enumerator)
-      @result = []
       @range_table = {}
     end
 
