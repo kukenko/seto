@@ -4,3 +4,5 @@ rvm:
 notifications:
   email:
     - m.kukenko@gmail.com
+script:
+  - bundle exec rspec
