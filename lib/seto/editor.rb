@@ -3,6 +3,7 @@ module Seto
     attr_reader :current_line, :line_number, :result
     def initialize(enumerator)
       @enumerator = enumerator
+      @patterns = {}
       @result = []
     end
 
@@ -38,6 +39,64 @@ module Seto
 
     def copy
       @result << @current_line.dup
+    end
+
+    def match?(condition)
+      case condition
+      when Fixnum then condition == @line_number
+      when Regexp then condition =~ @current_line
+      else
+        condition
+      end
+    end
+
+    def cover?(first, last)
+      case [first.class, last.class]
+      when [Fixnum, Fixnum] then cover1 first, last
+      else cover2 first, last
+      end
+    end
+
+    private
+
+    def cover1(first, last)
+      (first..last).cover? @line_number
+    end
+
+    def cover2(first, last)
+      (match_first? first) && (match_second? last)
+    end
+
+    def match_first?(condition)
+      case condition
+      when Fixnum then condition <= @line_number
+      when Regexp
+        unless @patterns.has_key? condition
+          if match? condition
+            @patterns[condition] = @line_number
+            true
+          else
+            false
+          end
+        else
+          true
+        end
+      end
+    end
+
+    def match_second?(condition)
+      case condition
+      when Fixnum then condition >= @line_number
+      when Regexp
+        unless @patterns.has_key? condition
+          if match? condition
+            @patterns[condition] = @line_number
+          end
+          true
+        else
+          false
+        end
+      end
     end
   end
 end

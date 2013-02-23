@@ -4,7 +4,6 @@ module Seto
   class Sed
     def initialize(enumerator)
       @editor = Seto::Editor.new(enumerator)
-      @range_table = {}
     end
 
     def edit(&block)
@@ -17,9 +16,9 @@ module Seto
     end
 
     def address(pattern, last=nil)
-      condition = within_the_limit?(pattern, last)
-      yield if condition && block_given?
-      condition
+      result = cover?(pattern, last)
+      yield if result && block_given?
+      result
     end
 
     # :label
@@ -166,70 +165,11 @@ module Seto
 
     private
 
-    # xxx
-    def within_the_limit?(pattern, last=nil)
+    def cover?(pattern, last=nil)
       unless last
-        case pattern
-        when Fixnum then pattern == @editor.line_number
-        when Regexp then pattern =~ @editor.current_line
-        else
-          pattern
-        end
+        @editor.match? pattern
       else
-        combination = [pattern.class, last.class]
-        case combination
-        when [Fixnum, Fixnum] then (pattern..last).cover? @editor.line_number
-        when [Regexp, Regexp]
-          unless @range_table.key? pattern
-            if pattern =~ @editor.current_line
-              @range_table[pattern] = @editor.line_number
-              true
-            else
-              false
-            end
-          else
-            unless @range_table.key? last
-              if last =~ @editor.current_line
-                @range_table[last] = @editor.line_number
-              end
-              true
-            else
-              false
-            end
-          end
-        when [Fixnum, Regexp]
-          if pattern > @editor.line_number
-            false
-          else
-            unless @range_table.key? last
-              if last =~ @editor.current_line
-                @range_table[last] = @editor.line_number
-              end
-              true
-            else
-              if @range_table[last] < @editor.line_number
-                false
-              else
-                true
-              end
-            end
-          end
-        when [Regexp, Fixnum]
-          unless @range_table.key? pattern
-            if pattern =~ @editor.current_line
-              @range_table[pattern] = @editor.line_number
-              true
-            else
-              false
-            end
-          else
-            if last >= @editor.line_number
-              true
-            else
-              false
-            end
-          end
-        end
+        @editor.cover? pattern, last
       end
     end
   end
