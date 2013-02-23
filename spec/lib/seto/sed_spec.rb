@@ -58,6 +58,20 @@ module Seto
         .should eql(["hello\n", "START world\n", "world\n", "END world\n", "hello\n"])
       end
 
+      it 'selects the row by line number and regexp range' do
+        startend.edit do
+          s /hello/, 'world' if address(3, /END/)
+        end
+        .should eql(["hello\n", "START hello\n", "world\n", "END world\n", "hello\n"])
+      end
+
+      it 'selects the row by the regexp and line number range' do
+        startend.edit do
+          s /hello/, 'world' if address(/START/, 3)
+        end
+        .should eql(["hello\n", "START world\n", "world\n", "END hello\n", "hello\n"])
+      end
+
       context 'with block' do
         it 'selects the row by the line number' do
           setois.edit do
@@ -86,6 +100,15 @@ module Seto
             end
           end
           .should eql(["hello\n", "START world\n", "world\n", "END world\n", "hello\n"])
+        end
+
+        it 'selects the row by line number and regexp range' do
+          startend.edit do
+            address(3, /END/) {
+              s /hello/, 'world'
+            }
+          end
+          .should eql(["hello\n", "START hello\n", "world\n", "END world\n", "hello\n"])
         end
       end
     end

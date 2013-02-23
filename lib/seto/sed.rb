@@ -197,8 +197,38 @@ module Seto
               false
             end
           end
-        when [Fixnum, Regexp] then false
-        when [Rangep, Fixnum] then false
+        when [Fixnum, Regexp]
+          if pattern > @editor.line_number
+            false
+          else
+            unless @range_table.key? last
+              if last =~ @editor.current_line
+                @range_table[last] = @editor.line_number
+              end
+              true
+            else
+              if @range_table[last] < @editor.line_number
+                false
+              else
+                true
+              end
+            end
+          end
+        when [Regexp, Fixnum]
+          unless @range_table.key? pattern
+            if pattern =~ @editor.current_line
+              @range_table[pattern] = @editor.line_number
+              true
+            else
+              false
+            end
+          else
+            if last >= @editor.line_number
+              true
+            else
+              false
+            end
+          end
         end
       end
     end
