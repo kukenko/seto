@@ -28,6 +28,7 @@ module Seto
       m.should include(:r)
       m.should include(:s)
       m.should include(:y)
+      m.should include(:x)
     end
 
     describe '#address' do
@@ -227,6 +228,17 @@ module Seto
       it 'transforms characters into the other charaters' do
         simple.edit { y 'a-z', 'A-Z' }
         .should eql(["SETO IS PSEUDO SED.\n"])
+      end
+    end
+
+    # xxx
+    describe '#x' do
+      it 'exchanges the pattern space and hold space' do
+        simple.edit do
+          h
+          x
+        end
+        .should eql(["Seto is pseudo sed.\n"])
       end
     end
   end

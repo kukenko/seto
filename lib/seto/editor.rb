@@ -50,6 +50,11 @@ module Seto
       @hold_space << @current_line.dup
     end
 
+    def exchange
+      @current_line, hs = @hold_space.pop, @current_line
+      @hold_space << hs
+    end
+
     def match?(condition)
       case condition
       when Fixnum then condition == @line_number

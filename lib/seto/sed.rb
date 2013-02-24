@@ -157,8 +157,10 @@ module Seto
 
     # x
     def exchange
-      raise NotImplementedError
+      @editor.exchange
     end
+
+    alias :x :exchange
 
     # y
     def transform(pattern, replace)
