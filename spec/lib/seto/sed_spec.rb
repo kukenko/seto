@@ -19,6 +19,7 @@ module Seto
       m.should include(:a)
       m.should include(:c)
       m.should include(:d)
+      m.should include(:g)
       m.should include(:h)
       m.should include(:i)
       m.should include(:n)
@@ -131,6 +132,16 @@ module Seto
     describe '#d' do
       it 'deletes current line' do
         simple.edit { d }.should be_empty
+      end
+    end
+
+    describe '#g' do
+      it 'copies the hold space into the pattern space' do
+        simple.edit do
+          h
+          g
+        end
+        .should eql(["Seto is pseudo sed.\n"])
       end
     end
 

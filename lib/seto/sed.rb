@@ -59,8 +59,10 @@ module Seto
 
     # g
     def get
-      raise NotImplementedError
+      @editor.get
     end
+
+    alias :g :get
 
     # G
     def get!

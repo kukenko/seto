@@ -42,6 +42,10 @@ module Seto
       @result << @current_line.dup
     end
 
+    def get
+      @current_line = @hold_space.pop
+    end
+
     def hold
       @hold_space << @current_line.dup
     end
