@@ -5,6 +5,7 @@ module Seto
       @enumerator = enumerator
       @patterns = {}
       @result = []
+      @hold_space = []
     end
 
     def load
@@ -39,6 +40,10 @@ module Seto
 
     def copy
       @result << @current_line.dup
+    end
+
+    def hold
+      @hold_space << @current_line.dup
     end
 
     def match?(condition)

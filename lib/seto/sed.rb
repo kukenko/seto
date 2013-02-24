@@ -69,8 +69,10 @@ module Seto
 
     # h
     def hold
-      raise NotImplementedError
+      @editor.hold
     end
+
+    alias :h :hold
 
     # H
     def hold!
