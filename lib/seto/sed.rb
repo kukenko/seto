@@ -1,7 +1,10 @@
+require 'forwardable'
 require 'seto/editor'
 
 module Seto
   class Sed
+    extend Forwardable
+
     def initialize(enumerator)
       @editor = Seto::Editor.new(enumerator)
     end
@@ -31,62 +34,30 @@ module Seto
       raise NotImplementedError
     end
 
-    # a
-    def append(text)
-      @editor.append text
-    end
-
-    alias :a :append
+    def_delegator :@editor, :append, :a
+    def_delegator :@editor, :change, :c
+    def_delegator :@editor, :delete, :d
+    def_delegator :@editor, :get, :g
+    def_delegator :@editor, :hold, :h
+    def_delegator :@editor, :insert, :i
+    def_delegator :@editor, :substitute, :s
+    def_delegator :@editor, :exchange, :x
+    def_delegator :@editor, :transform, :y
 
     # b
     def branch(label)
       raise NotImplementedError
     end
 
-    # c
-    def change(text)
-      @editor.change text
-    end
-
-    alias :c :change
-
-    # d
-    def delete
-      @editor.delete
-    end
-
-    alias :d :delete
-
-    # g
-    def get
-      @editor.get
-    end
-
-    alias :g :get
-
     # G
     def get!
       raise NotImplementedError
     end
 
-    # h
-    def hold
-      @editor.hold
-    end
-
-    alias :h :hold
-
     # H
     def hold!
       raise NotImplementedError
     end
-
-    # i
-    def insert(text)
-      @editor.insert text
-    end
-
-    alias :i :insert
 
     # l
     def look
@@ -138,13 +109,6 @@ module Seto
 
     alias :r :read
 
-    # s
-    def substitute(pattern, replace, flag=nil)
-      @editor.substitute pattern, replace, flag
-    end
-
-    alias :s :substitute
-
     # t
     def test(label)
       raise NotImplementedError
@@ -154,20 +118,6 @@ module Seto
     def write(filename)
       raise NotImplementedError
     end
-
-    # x
-    def exchange
-      @editor.exchange
-    end
-
-    alias :x :exchange
-
-    # y
-    def transform(pattern, replace)
-      @editor.transform pattern, replace
-    end
-
-    alias :y :transform
 
     private
 
