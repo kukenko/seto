@@ -55,6 +55,29 @@ module Seto
       @hold_space << hs
     end
 
+    def next
+      copy
+      load
+    end
+
+    def print
+      Kernel.print @current_line
+    end
+
+    def quit
+      copy
+      raise StopIteration
+    end
+
+    def read(filename)
+      begin
+        text = open(filename).read
+      rescue
+        # ignore
+      end
+      append text if text
+    end
+
     def match?(condition)
       case condition
       when Fixnum then condition == @line_number
