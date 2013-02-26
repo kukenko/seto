@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'tempfile'
 
 module Seto
   describe Sed do
@@ -28,8 +29,9 @@ module Seto
       m.should include(:q)
       m.should include(:r)
       m.should include(:s)
-      m.should include(:y)
+      m.should include(:w)
       m.should include(:x)
+      m.should include(:y)
     end
 
     describe '#address' do
@@ -236,10 +238,12 @@ module Seto
       end
     end
 
-    describe '#y' do
-      it 'transforms characters into the other charaters' do
-        simple.edit { y 'a-z', 'A-Z' }
-        .should eql(["SETO IS PSEUDO SED.\n"])
+    describe '#w' do
+      it 'writes to file' do
+        tempfile = Tempfile.new('seto_temp')
+        setois.edit { w tempfile }
+        open(tempfile).read.should eql("Seto is pseudo sed.\nSeto is a place name.\n")
+        tempfile.close!
       end
     end
 
@@ -251,6 +255,13 @@ module Seto
           x
         end
         .should eql(["Seto is pseudo sed.\n"])
+      end
+    end
+
+    describe '#y' do
+      it 'transforms characters into the other charaters' do
+        simple.edit { y 'a-z', 'A-Z' }
+        .should eql(["SETO IS PSEUDO SED.\n"])
       end
     end
   end

@@ -82,6 +82,12 @@ module Seto
       append text if text
     end
 
+    def write(filename)
+      open(filename, 'a') do |f|
+        f.write @current_line
+      end
+    end
+
     def match?(condition)
       case condition
       when Fixnum then condition == @line_number

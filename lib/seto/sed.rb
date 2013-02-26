@@ -24,20 +24,21 @@ module Seto
       result
     end
 
-    def_delegator :@editor, :append, :a
-    def_delegator :@editor, :change, :c
-    def_delegator :@editor, :delete, :d
-    def_delegator :@editor, :get, :g
-    def_delegator :@editor, :hold, :h
-    def_delegator :@editor, :insert, :i
+    def_delegator :@editor, :append,     :a
+    def_delegator :@editor, :change,     :c
+    def_delegator :@editor, :delete,     :d
+    def_delegator :@editor, :get,        :g
+    def_delegator :@editor, :hold,       :h
+    def_delegator :@editor, :insert,     :i
     def_delegator :@editor, :lineno
-    def_delegator :@editor, :next, :n
-    def_delegator :@editor, :print, :p
-    def_delegator :@editor, :quit, :q
-    def_delegator :@editor, :read, :r
+    def_delegator :@editor, :next,       :n
+    def_delegator :@editor, :print,      :p
+    def_delegator :@editor, :quit,       :q
+    def_delegator :@editor, :read,       :r
     def_delegator :@editor, :substitute, :s
-    def_delegator :@editor, :exchange, :x
-    def_delegator :@editor, :transform, :y
+    def_delegator :@editor, :write,      :w
+    def_delegator :@editor, :exchange,   :x
+    def_delegator :@editor, :transform,  :y
 
     # :label
     def label
@@ -76,11 +77,6 @@ module Seto
 
     # t
     def test(label)
-      raise NotImplementedError
-    end
-
-    # w
-    def write(filename)
       raise NotImplementedError
     end
 
