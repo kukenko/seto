@@ -30,6 +30,7 @@ module Seto
     def_delegator :@editor, :get, :g
     def_delegator :@editor, :hold, :h
     def_delegator :@editor, :insert, :i
+    def_delegator :@editor, :lineno
     def_delegator :@editor, :next, :n
     def_delegator :@editor, :print, :p
     def_delegator :@editor, :quit, :q
@@ -40,11 +41,6 @@ module Seto
 
     # :label
     def label
-      raise NotImplementedError
-    end
-
-    # =
-    def lineno
       raise NotImplementedError
     end
 

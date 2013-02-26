@@ -55,6 +55,10 @@ module Seto
       @hold_space << hs
     end
 
+    def lineno
+      Kernel.print @line_number
+    end
+
     def next
       copy
       load

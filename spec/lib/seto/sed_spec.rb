@@ -22,6 +22,7 @@ module Seto
       m.should include(:g)
       m.should include(:h)
       m.should include(:i)
+      m.should include(:lineno)
       m.should include(:n)
       m.should include(:p)
       m.should include(:q)
@@ -161,6 +162,17 @@ module Seto
       it 'inserts text before current line' do
         simple.edit { i 'by ruby.' }
         .should eql(["by ruby.Seto is pseudo sed.\n"])
+      end
+    end
+
+    describe '#lineno' do
+      it 'prints current line number to stdout' do
+        capture {
+          startend.edit {
+            lineno if address /START/
+          }
+        }
+        .should eql("2")
       end
     end
 
