@@ -111,7 +111,7 @@ module Seto
     end
 
     def cover2(first, last)
-      (match_first? first) && (match_second? last)
+      (match_first? first) && (match_second? first, last)
     end
 
     def match_first?(condition)
@@ -131,7 +131,8 @@ module Seto
       end
     end
 
-    def match_second?(condition)
+    def match_second?(*conditions)
+      condition = conditions[1]
       case condition
       when Fixnum then condition >= @line_number
       when Regexp
@@ -141,6 +142,7 @@ module Seto
           end
           true
         else
+          conditions.each { |key| @patterns.delete key }
           false
         end
       end
