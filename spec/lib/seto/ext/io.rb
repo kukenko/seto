@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe File do
+describe IO do
   let(:file) { File.open('./spec/files/seto_is.txt') }
 
   describe '#sed' do

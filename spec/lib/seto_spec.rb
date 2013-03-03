@@ -5,7 +5,7 @@ describe Seto do
     ''.methods.should include(:sed)
   end
 
-  it 'extends the File class' do
-    File.open(__FILE__).methods.should include(:sed)
+  it 'extends the IO class' do
+    IO.new(0).methods.should include(:sed)
   end
 end
