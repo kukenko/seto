@@ -5,8 +5,7 @@
 Seto is pseudo sed.
 
 ## Installation
-
-TODO: Write installation here
+    gem install seto
 
 ## Examples
 ### substitute the replacement
