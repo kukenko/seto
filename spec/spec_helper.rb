@@ -1,5 +1,5 @@
 require 'seto'
-require 'seto/sed'
+require 'seto/editor'
 require 'stringio'
 
 def capture

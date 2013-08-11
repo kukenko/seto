@@ -8,70 +8,101 @@ module Seto
       @hold_space = []
     end
 
-    def load
+    def edit(&block)
+      loop do
+        load_line
+        instance_eval &block
+        copy_to_result
+      end
+      result.reject { |l| l.empty? }
+    end
+
+    def address(pattern, last=nil)
+      result = unless last
+                 match? pattern
+               else
+                 cover? pattern, last
+               end
+      yield if result && block_given?
+      result
+    end
+
+    def load_line
       @current_line, @line_number = @enumerator.next
     end
 
     def append(text)
       @current_line += text
     end
+    alias_method :a, :append
 
     def change(text)
       @current_line = text
     end
+    alias_method :c, :change
 
     def delete
       @current_line = ''
     end
+    alias_method :d, :delete
 
     def insert(text)
       @current_line = "#{text}#{@current_line}"
     end
+    alias_method :i, :insert
 
     def substitute(pattern, replace, flag=nil)
       method = :sub!
       method = :gsub! if flag && flag == :g
       @current_line.send method, pattern, replace
     end
+    alias_method :s, :substitute
 
     def transform(pattern, replace)
       @current_line.tr! pattern, replace
     end
+    alias_method :y, :transform
 
-    def copy
+    def copy_to_result
       @result << @current_line.dup
     end
 
     def get
       @current_line = @hold_space.pop
     end
+    alias_method :g, :get
 
     def hold
       @hold_space << @current_line.dup
     end
+    alias_method :h, :hold
 
     def exchange
       @current_line, hs = @hold_space.pop, @current_line
       @hold_space << hs
     end
+    alias_method :x, :exchange
 
     def lineno
       Kernel.print @line_number
     end
 
     def next
-      copy
-      load
+      copy_to_result
+      load_line
     end
+    alias_method :n, :next
 
     def print
       Kernel.print @current_line
     end
+    alias_method :p, :print
 
     def quit
-      copy
+      copy_to_result
       raise StopIteration
     end
+    alias_method :q, :quit
 
     def read(filename)
       begin
@@ -81,12 +112,14 @@ module Seto
       end
       append text if text
     end
+    alias_method :r, :read
 
     def write(filename)
       open(filename, 'a') do |f|
         f.write @current_line
       end
     end
+    alias_method :w, :write
 
     def match?(condition)
       case condition
@@ -99,14 +132,14 @@ module Seto
 
     def cover?(first, last)
       case [first.class, last.class]
-      when [Fixnum, Fixnum] then cover1 first, last
+      when [Fixnum, Fixnum] then within first, last
       else cover2 first, last
       end
     end
 
     private
 
-    def cover1(first, last)
+    def within(first, last)
       (first..last).cover? @line_number
     end
 

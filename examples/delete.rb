@@ -3,7 +3,8 @@ require 'seto'
 
 DATA.sed {
   d if address(/<!--/, /-->/)
-}.each { |l| puts l }
+  p
+}
 
 __END__
 <html>

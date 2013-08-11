@@ -10,7 +10,8 @@ DATA.sed {
   </head>
 EOS
   }
-}.each { |l| puts l }
+  p
+}
 
 __END__
 <html>

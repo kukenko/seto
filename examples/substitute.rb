@@ -4,7 +4,8 @@ require 'seto'
 DATA.sed {
   s /<b>/, '<strong>'
   s %r!</b>!, '</strong>'
-}.each { |l| puts l }
+  p
+}
 
 __END__
 <html>
